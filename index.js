@@ -14,15 +14,15 @@ const bookRouter = require('./routes/book.js')
 const dbConnect = require('./db/db.js')
 
 const { errorHandle, logger } = require('./middlewares/index.js')
-const Tweet = require('./models/tweet');
+const tweet = require('./routes/tweet.js');
 
-dbConnect()
+dbConnect().catch(err => console.log(err))
 
 app.use(parser.json())
 app.use(logger)
 app.use('/users', userRoute)
 app.use('/books', bookRouter)
-app.use('/tweets', Tweet);
+app.use('/tweets', tweet);
 app.use(errorHandle)
 
 server = https.createServer({ key, cert }, app);

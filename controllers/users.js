@@ -1,27 +1,23 @@
 const User = require('../models/user')
 
-const getUser = (req, res) => {
+const getUser = async (req, res) => {
     // If string in userId
     const userId = req.params.id
-    const user = users.find((user) => {
-        return user.id == userId
-    })
-    if (!user) {
-        return res.json({})
-    }
+    const user = await User.findById(userId)
     res.json(user)
 }
-const getUsers = (req, res) => {
-    return res.json({ users })
+
+const getUsers = async (req, res) => {
+    const users = await User.find().populate('tweets')
+    return res.json(users)
 }
-const deleteUserById = (req, res) => {
+
+const deleteUserById = async (req, res) => {
     const id = req.params.id
-    const user = users.find((user) => {
-        return user.id == id
-    })
-    users.pop(user)
+    const user = await User.deleteOne(id)
     return res.json(user)
 }
+
 const createUser = async (req, res) => {
     const { name, age, email } = req.body
     const user = new User({
@@ -30,6 +26,7 @@ const createUser = async (req, res) => {
         email: email
     })
     const result = await user.save()
-    return res.json(user)
+    return res.json(result)
 }
+
 module.exports = { getUser, getUsers, deleteUserById, createUser }
